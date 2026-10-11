@@ -5,9 +5,11 @@ const env = require('../../config/env');
 const { success, error } = require('../../utils/response');
 const { logAudit } = require('../../utils/audit');
 
+const ACADEMIC_PROGRAMS = ['BSIT', 'BSCS', 'BSECE', 'BSIS'];
+
 const signup = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, academicProgram } = req.body;
     const details = {};
 
     if (!name || !name.trim()) {
@@ -24,6 +26,9 @@ const signup = async (req, res, next) => {
     const validRoles = ['Student', 'IndustryPartner', 'OJTCoordinator', 'SchoolAdministrator'];
     if (!role || !validRoles.includes(role)) {
       details.role = `Role must be one of: ${validRoles.join(', ')}.`;
+    }
+    if (role === 'Student' && !ACADEMIC_PROGRAMS.includes(academicProgram)) {
+      details.academicProgram = `Academic program must be one of: ${ACADEMIC_PROGRAMS.join(', ')}.`;
     }
 
     if (Object.keys(details).length > 0) {
@@ -51,6 +56,30 @@ const signup = async (req, res, next) => {
       Role: role,
       Status: 'active'
     });
+
+    // Students pick their academic program at signup so the profile exists
+    // right away for rule-based matching (location/skills are completed later).
+    if (user.Role === 'Student') {
+      const studentProfile = await StudentProfile.create({
+        UserID: user.UserID,
+        AcademicProgram: academicProgram,
+        YearLevel: 'Year 3',
+        Interests: '',
+        PreferredLocation: ''
+      });
+
+      await logAudit({
+        userId: user.UserID,
+        action: 'CREATE_STUDENT_PROFILE',
+        entityAffected: 'STUDENT_PROFILE',
+        entityId: studentProfile.ProfileID,
+        oldValue: null,
+        newValue: {
+          academicProgram: studentProfile.AcademicProgram,
+          yearLevel: studentProfile.YearLevel
+        }
+      });
+    }
 
     const token = jwt.sign(
       { userId: user.UserID, role: user.Role, email: user.Email },

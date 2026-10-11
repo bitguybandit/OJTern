@@ -5,8 +5,8 @@ export const loginApi = async (email, password) => {
   return res.data;
 };
 
-export const signupApi = async ({ name, email, password, role }) => {
-  const res = await api.post('/auth/signup', { name, email, password, role });
+export const signupApi = async ({ name, email, password, role, academicProgram }) => {
+  const res = await api.post('/auth/signup', { name, email, password, role, academicProgram });
   return res.data;
 };
 
