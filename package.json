@@ -1,0 +1,20 @@
+{
+  "name": "ojterm",
+  "version": "1.0.0",
+  "description": "OJTerm — Smart Web-Based OJT Matching Platform and Recommendation System",
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "migrate": "npm --prefix server run migrate",
+    "seed": "npm --prefix server run seed",
+    "test:volume": "npm --prefix server run test:volume"
+  },
+  "keywords": [
+    "ojt",
+    "internship-matching",
+    "recommendation-system",
+    "dutertech"
+  ],
+  "author": "Team DUTERTECH (Section 1)",
+  "license": "ISC"
+}
