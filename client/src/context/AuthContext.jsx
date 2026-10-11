@@ -1,24 +1,25 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { loginApi, signupApi, getMeApi } from '../api/auth.api';
+import { getStoredToken, storeToken, clearStoredToken } from '../api/token';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('ojterm_token'));
+  const [token, setToken] = useState(() => getStoredToken());
   const [loading, setLoading] = useState(true);
 
   // Initialize auth from stored token
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('ojterm_token');
+      const storedToken = getStoredToken();
       if (storedToken) {
         try {
           const userData = await getMeApi();
           setUser(userData);
         } catch (err) {
           console.warn('Session expired or invalid token:', err);
-          localStorage.removeItem('ojterm_token');
+          clearStoredToken();
           setToken(null);
           setUser(null);
         }
@@ -29,24 +30,24 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, remember = true) => {
     const res = await loginApi(email, password);
-    localStorage.setItem('ojterm_token', res.token);
+    storeToken(res.token, remember);
     setToken(res.token);
     setUser(res.user);
     return res.user;
   };
 
-  const signup = async (data) => {
+  const signup = async (data, remember = true) => {
     const res = await signupApi(data);
-    localStorage.setItem('ojterm_token', res.token);
+    storeToken(res.token, remember);
     setToken(res.token);
     setUser(res.user);
     return res.user;
   };
 
   const logout = useCallback(() => {
-    localStorage.removeItem('ojterm_token');
+    clearStoredToken();
     setToken(null);
     setUser(null);
   }, []);

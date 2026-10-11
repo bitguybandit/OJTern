@@ -1,4 +1,5 @@
 import api from './axios';
+import { getStoredToken } from './token';
 
 export const getPlacementReportApi = async ({ month, year }) => {
   const params = new URLSearchParams();
@@ -9,7 +10,7 @@ export const getPlacementReportApi = async ({ month, year }) => {
 };
 
 export const downloadPlacementReportCsv = async ({ month, year }) => {
-  const token = localStorage.getItem('ojterm_token');
+  const token = getStoredToken();
   const params = new URLSearchParams();
   if (month) params.append('month', month);
   if (year) params.append('year', year);

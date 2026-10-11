@@ -8,9 +8,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Landing Page
 import Landing from './pages/Landing';
 
-// Auth Pages
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
+// Auth Pages (Sign In / Create Account on the same tabbed page)
+import AuthPage from './pages/auth/AuthPage';
 
 // Student Pages
 import ProfileBuilder from './pages/student/ProfileBuilder';
@@ -58,8 +57,8 @@ function App() {
               <Routes>
                 {/* Public / Auth */}
                 <Route path="/" element={<RootRedirect />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<AuthPage />} />
 
                 {/* Student Routes */}
                 <Route
