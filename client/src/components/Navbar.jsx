@@ -8,11 +8,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Hide the app navbar on the landing page (it has its own nav)
-  if (location.pathname === '/' && !isAuthenticated) {
-    return null;
-  }
-
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
@@ -47,6 +42,14 @@ const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Hide the app navbar on the landing page (it has its own nav) and on the
+  // auth pages (they render their own branded header).
+  // Keep this below all hooks so the hook order stays stable across renders.
+  const hideNavbarOn = ['/', '/login', '/signup'];
+  if (hideNavbarOn.includes(location.pathname) && !isAuthenticated) {
+    return null;
+  }
 
   const toggleNotifications = async () => {
     if (!showNotifDropdown) {
