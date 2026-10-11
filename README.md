@@ -134,4 +134,4 @@ npm run dev               # starts on http://localhost:5000
 # 3. Frontend setup (in a new terminal)
 cd ../client
 npm install
-npm run dev               # starts on http://localhost:5173
+npm run dev               # starts on http://localhost:3000
