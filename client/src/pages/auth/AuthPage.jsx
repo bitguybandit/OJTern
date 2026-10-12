@@ -45,6 +45,84 @@ const DEMO_ACCOUNTS = [
   { email: 'admin@ojterm.test', title: 'System Admin', subtitle: 'School Administrator', Icon: ShieldUserIcon, tone: 'sky' }
 ];
 
+const FEATURE_ITEMS = [
+  {
+    title: 'Streamlined Placement',
+    description: 'Browse openings from hundreds of accredited partners and manage your applications seamlessly.',
+    Icon: SparkleIcon,
+    tone: 'blue'
+  },
+  {
+    title: 'Real-time Progress Tracking',
+    description: 'Log your DTR visually, submit requirements files, and monitor supervisor evaluations instantly.',
+    Icon: ClipboardIcon,
+    tone: 'indigo'
+  },
+  {
+    title: 'Secure Document Hub',
+    description: 'End-to-end encrypted storage for MOAs, medical certificates, and performance reviews.',
+    Icon: ShieldUserIcon,
+    tone: 'purple'
+  }
+];
+
+const AuthLogoMark = () => (
+  <div className="auth-logo-mark" aria-label="OJTerm">
+    <span className="auth-logo-mark-tile">
+      <SparkleIcon width={20} height={20} />
+    </span>
+    <span className="auth-logo-mark-text">
+      <strong>OJTerm</strong>
+      <small>Enterprise</small>
+    </span>
+  </div>
+);
+
+const AuthSidebar = () => (
+  <aside className="auth-sidebar">
+    <div className="auth-sidebar-brand" aria-label="OJTerm Enterprise">
+      <div className="auth-sidebar-logo">
+        <SparkleIcon width={19} height={19} />
+      </div>
+      <span className="auth-sidebar-wordmark">OJTerm</span>
+      <span className="auth-sidebar-badge">Enterprise</span>
+    </div>
+
+    <h1 className="auth-sidebar-title">
+      Your gateway to
+      <span>real-world experience.</span>
+    </h1>
+
+    <p className="auth-sidebar-copy">
+      The centralized platform for students to track training hours, manage placement documents, and
+      connect with verified industry partners.
+    </p>
+
+    <div className="auth-feature-list">
+      {FEATURE_ITEMS.map(({ title, description, Icon, tone }) => (
+        <div key={title} className="auth-feature-item">
+          <span className={`auth-feature-icon tone-${tone}`}>
+            <Icon width={16} height={16} />
+          </span>
+          <div>
+            <strong>{title}</strong>
+            <p>{description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="auth-sidebar-footer">
+      <span>Universally Verified Network</span>
+      <div className="auth-sidebar-dots" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
+  </aside>
+);
+
 /* ── Sign In panel ── */
 const SignInPanel = () => {
   const { login, getDefaultRouteForRole } = useAuth();
@@ -529,52 +607,56 @@ const AuthPage = () => {
       <span className="auth-glow auth-glow-top" aria-hidden="true" />
       <span className="auth-glow auth-glow-bottom" aria-hidden="true" />
 
-      <div className={`auth-shell ${isSignUp ? 'is-wide' : ''}`}>
-        <div className="auth-header">
-          <button
-            type="button"
-            className="auth-back"
-            onClick={() => navigate('/')}
-            aria-label="Back to landing page"
-          >
-            <ArrowLeftIcon width={20} height={20} />
-          </button>
+      <div className={`auth-shell ${isSignUp ? 'is-wide' : 'auth-shell--login'}`}>
+        <div className="auth-panels">
+          {isSignUp && <AuthSidebar />}
 
-          <div className="auth-logo">
-            <SparkleIcon width={26} height={26} />
-          </div>
-          <div className="auth-wordmark">
-            <span className="auth-wordmark-text">OJTerm</span>
-            <span className="auth-badge">Enterprise</span>
-          </div>
-          <p className="auth-tagline">
-            On-the-Job Training &amp; Internship Placement Management Platform
-          </p>
-        </div>
+          <div className="auth-card">
+            <div className="auth-card-top">
+              <button
+                type="button"
+                className="auth-back"
+                onClick={() => navigate('/')}
+                aria-label="Back to landing page"
+              >
+                <ArrowLeftIcon width={18} height={18} />
+              </button>
 
-        <div className="auth-card">
-          <div className="auth-tabs" role="tablist" aria-label="Authentication mode">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={!isSignUp}
-              className={`auth-tab ${!isSignUp ? 'is-active' : ''}`}
-              onClick={() => goTo('/login')}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={isSignUp}
-              className={`auth-tab ${isSignUp ? 'is-active' : ''}`}
-              onClick={() => goTo('/signup')}
-            >
-              Create Account
-            </button>
-          </div>
+              <AuthLogoMark />
+            </div>
 
-          {isSignUp ? <CreateAccountPanel /> : <SignInPanel />}
+            <div className="auth-card-header">
+              <h2>{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
+              <p>
+                {isSignUp
+                  ? 'Create your profile to continue your placement journey.'
+                  : 'Please sign in to your account to continue.'}
+              </p>
+            </div>
+
+            <div className="auth-tabs" role="tablist" aria-label="Authentication mode">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={!isSignUp}
+                className={`auth-tab ${!isSignUp ? 'is-active' : ''}`}
+                onClick={() => goTo('/login')}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={isSignUp}
+                className={`auth-tab ${isSignUp ? 'is-active' : ''}`}
+                onClick={() => goTo('/signup')}
+              >
+                Create Account
+              </button>
+            </div>
+
+            {isSignUp ? <CreateAccountPanel /> : <SignInPanel />}
+          </div>
         </div>
 
         <p className="auth-footer">
