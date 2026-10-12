@@ -231,15 +231,17 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 4px 12px 4px 6px;
+  padding: 8px 12px;
   background: var(--bg-subtle);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
+  min-width: 0;
 }
 
 .user-avatar {
   width: 30px;
   height: 30px;
+  flex: none;
   background: var(--primary);
   color: white;
   border-radius: 50%;
@@ -254,12 +256,16 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   line-height: 1.1;
+  min-width: 0;
 }
 
 .user-display-name {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-role-tag {
@@ -271,6 +277,14 @@ h1, h2, h3, h4, h5, h6 {
 /* Notification Bell & Dropdown */
 .notif-wrapper {
   position: relative;
+}
+
+/* The sidebar trigger is a plain button; drop the browser default chrome
+   that the removed .notif-btn class used to reset. */
+.notif-wrapper > button {
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .notif-btn {
@@ -293,9 +307,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .notif-badge {
-  position: absolute;
-  top: 2px;
-  right: 2px;
+  flex: none;
   background: var(--danger);
   color: white;
   font-size: 10px;
@@ -305,26 +317,30 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 18px;
   border-radius: var(--radius-full);
   text-align: center;
-  padding: 0 4px;
-  box-shadow: 0 0 0 2px white;
+  padding: 0 5px;
+}
+
+.notif-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .notif-dropdown {
   position: absolute;
-  top: 42px;
-  right: 0;
-  width: 360px;
+  width: 100%;
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-xl);
   z-index: 1000;
   overflow: hidden;
-  animation: fadeInDown 0.2s ease-out;
+  animation: fadeInUp 0.2s ease-out;
 }
 
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -398,6 +414,54 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 11px;
   color: var(--text-muted);
 }
+
+/* ----------------------------------------------------------------------
+   Sidebar layout utilities
+   The navigation sidebar is authored with Tailwind-style utility class
+   names. Tailwind is not part of this build, so the subset of utilities
+   the sidebar relies on is implemented here to keep the layout rendering
+   as designed. Only class names used by the sidebar are defined.
+   ---------------------------------------------------------------------- */
+.fixed { position: fixed; }
+.left-0 { left: 0; }
+.top-0 { top: 0; }
+.z-50 { z-index: 50; }
+.h-screen { height: 100vh; }
+.h-16 { height: 64px; }
+.w-64 { width: 16rem; }
+.ml-64 { margin-left: 16rem; }
+.w-full { width: 100%; }
+.bg-white { background: var(--bg-card); }
+.bg-slate-50 { background: #f8fafc; }
+.bg-indigo-50 { background: var(--primary-subtle); }
+.text-slate-600 { color: var(--text-muted); }
+.text-slate-700 { color: #334155; }
+.text-indigo-600 { color: var(--primary); }
+.border-r { border-right: 1px solid; }
+.border-b { border-bottom: 1px solid; }
+.border-t { border-top: 1px solid; }
+.border-slate-200 { border-color: var(--border-light); }
+.flex { display: flex; }
+.block { display: block; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.overflow-y-auto { overflow-y: auto; }
+.p-4 { padding: 16px; }
+.px-4 { padding-left: 16px; padding-right: 16px; }
+.px-6 { padding-left: 24px; padding-right: 24px; }
+.py-3 { padding-top: 12px; padding-bottom: 12px; }
+.py-2\.5 { padding-top: 10px; padding-bottom: 10px; }
+.mb-2 { margin-bottom: 8px; }
+.bottom-full { bottom: 100%; }
+.space-x-2 > * + * { margin-left: 8px; }
+.space-y-1 > * + * { margin-top: 4px; }
+.space-y-4 > * + * { margin-top: 16px; }
+.rounded-lg { border-radius: var(--radius-md); }
+.text-sm { font-size: 14px; }
+.font-medium { font-weight: 500; }
+.transition { transition: all 0.2s ease; }
+.hover\:bg-slate-100:hover { background: var(--bg-subtle); }
 
 /* Cards */
 .card {
@@ -2458,6 +2522,12 @@ body:has(.landing-page) .main-content {
 .auth-page + .main-content,
 body:has(.auth-page) .main-content {
   padding: 0 !important;
+}
+
+/* The landing and auth screens render without the fixed sidebar, so their
+   content keeps the full viewport width instead of the sidebar offset. */
+body:not(:has(.app-container > aside)) .main-content {
+  margin-left: 0;
 }
 
 /* ── Responsive ── */

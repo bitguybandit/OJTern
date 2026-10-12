@@ -53,7 +53,7 @@ function App() {
         <AuthProvider>
           <div className="app-container">
             <Navbar />
-            <main className="main-content">
+            <main className="main-content ml-64">
               <Routes>
                 {/* Public / Auth */}
                 <Route path="/" element={<RootRedirect />} />
